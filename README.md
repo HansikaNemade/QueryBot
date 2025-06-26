@@ -9,7 +9,7 @@ This is a **Streamlit-based web application** that uses **Google Gemini (via Lan
 ## 🚀 Features
 
 - 🔐 User authentication with hashed passwords.
-- 🧠 Converts natural language questions to SQL using Gemini 1.5 Flash.
+- 🧠 Converts natural language questions to SQL using Gemini 1.5 Flash latest.
 - 🗂 Dynamically extracts table schema (columns, primary and foreign keys).
 - 📊 Executes `SELECT`, `INSERT`, and other queries and shows results.
 - 🌐 Built with Streamlit for a clean and simple UI.

@@ -175,10 +175,10 @@ def execute_postgres_query(query: str):
             return df
         else:
             connection.commit()
-            return "Query executed successfully."
+            return "✅ Query executed successfully."
 
     except Exception as e:
-        return f"Error executing query: {e}"
+        return f"❌ Error executing query: {e}"
 
     finally:
         if cursor:
@@ -190,7 +190,7 @@ def execute_postgres_query(query: str):
 
 
 # ---------- Streamlit App UI ----------
-add_bg_from_local("xyz.jpg")
+add_bg_from_local("img1.jpg")
 
 
 # Streamlit App
@@ -211,10 +211,10 @@ if not st.session_state.authenticated:
 else:
 
     # Main App UI
-    st.title("AI-Powered SQL Query Generator & Executor")
+    st.title("LLM-Powered SQL QueryBot")
     st.subheader("Convert Natural Language to SQL and Execute It on PostgreSQL Database")
 
-    query_type = st.radio("Select Query Type:", ("Retrieve Data", "Insert Data"))
+    #query_type = st.radio("Select Query Type:", ("Retrieve Data", "Insert Data"))
 
     question = st.text_area("Enter your natural language query:")
 
@@ -227,6 +227,7 @@ else:
             sql_query = generate_query.invoke({"question": full_input}).replace("SQLQuery:", "").strip()
             st.code(sql_query, language="sql")
 
+            # ✅ This must be inside the spinner block
             query_results = execute_postgres_query(sql_query)
 
             if isinstance(query_results, pd.DataFrame):
@@ -242,7 +243,7 @@ if st.button("Logout"):
 
 
 #Count number of employees per department
-#Total salary paid in each department
+#count of salaries paid in each department
 #Find the maximum and minimum salary
 #Count number of employees per department
 #Find all employees with their titles

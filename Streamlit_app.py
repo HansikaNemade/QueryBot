@@ -1,5 +1,6 @@
 
 
+
 import streamlit as st
 import base64
 import psycopg2
@@ -175,10 +176,10 @@ def execute_postgres_query(query: str):
             return df
         else:
             connection.commit()
-            return "✅ Query executed successfully."
+            return "Query executed successfully."
 
     except Exception as e:
-        return f"❌ Error executing query: {e}"
+        return f"Error executing query: {e}"
 
     finally:
         if cursor:
@@ -227,7 +228,6 @@ else:
             sql_query = generate_query.invoke({"question": full_input}).replace("SQLQuery:", "").strip()
             st.code(sql_query, language="sql")
 
-            # ✅ This must be inside the spinner block
             query_results = execute_postgres_query(sql_query)
 
             if isinstance(query_results, pd.DataFrame):
@@ -248,7 +248,6 @@ if st.button("Logout"):
 #Count number of employees per department
 #Find all employees with their titles
 #List all employees with their department names
-
 
 
 

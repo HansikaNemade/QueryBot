@@ -58,3 +58,6 @@ streamlit run Streamlit_app.py
 
 ```
 
+# Data Modeling
+
+![](DB_model.png)

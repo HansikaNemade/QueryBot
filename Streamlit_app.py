@@ -1,5 +1,7 @@
 
 
+
+
 import streamlit as st
 import base64
 import psycopg2
@@ -81,23 +83,70 @@ class SchemaExtractorAgent:
 #   Query Generator Agent
 class SQLGeneratorAgent:
     def __init__(self, llm, db):
-        self.chain = create_sql_query_chain(llm, db)
+        #self.chain = create_sql_query_chain(llm, db)
+        self.llm = llm
 
     def generate_sql(self, question, schema):
         prompt = f"""You are an expert in converting English to SQL queries.
 
 {schema}
 
-- input :- How many employees are in the database?
-  output:- SELECT COUNT(*) FROM emp;
-- input:- List all employees in the IT department.
-  output:- SELECT * FROM emp WHERE department = 'IT';
+Here are some examples:
 
-Only output the SQL query. Do not use backticks.
+### Example 1
+Q: How many employees are in the database?
+A: SELECT COUNT(*) FROM Employee;
+
+### Example 2
+Q: List all departments.
+A: SELECT * FROM Department;
+
+### Example 3
+Q: Get the names of employees working in the IT department.
+A: SELECT e.first_name, e.last_name
+   FROM Employee e
+   JOIN Department_Employee de ON e.emp_no = de.emp_no
+   JOIN Department d ON de.dept_no = d.dept_no
+   WHERE d.dept_name = 'IT';
+
+### Example 4
+Q: Show department names and the number of employees in each.
+A: SELECT d.dept_name, COUNT(de.emp_no) AS employee_count
+   FROM Department d
+   JOIN Department_Employee de ON d.dept_no = de.dept_no
+   GROUP BY d.dept_name;
+
+### Example 5
+Q: Find the average salary of employees in the Sales department.
+A: SELECT AVG(s.salary) AS average_salary
+   FROM Employee e
+   JOIN Department_Employee de ON e.emp_no = de.emp_no
+   JOIN Department d ON de.dept_no = d.dept_no
+   JOIN Salaries s ON e.emp_no = s.emp_no
+   WHERE d.dept_name = 'Sales';
+
+### Example 6
+Q: Get names of employees who are department managers.
+A: SELECT e.first_name, e.last_name
+   FROM Employee e
+   JOIN Department_Manager dm ON e.emp_no = dm.emp_no;
+
+### Example 7
+Q: Show each employee’s title and department.
+A: SELECT e.first_name, e.last_name, t.title, d.dept_name
+   FROM Employee e
+   JOIN Titles t ON e.emp_title_id = t.title_id
+   JOIN Department_Employee de ON e.emp_no = de.emp_no
+   JOIN Department d ON de.dept_no = d.dept_no;
+
+Only output the SQL query. Do not include any explanation or backticks.
 
 Question: {question}
 """
-        return self.chain.invoke({"question": prompt}).replace("SQLQuery:", "").strip()
+        #return self.chain.invoke({"question": prompt}).replace("SQLQuery:", "").strip()
+        response = self.llm.invoke(prompt)
+        output = response.content
+        return output.replace("SQLQuery:", "").strip()
 
 
 
@@ -236,7 +285,11 @@ if st.button("Logout"):
 #List managers and the departments they manage
 #Find highest paid employee with name
 #Get all titles do not limit
+#List employees with salaries higher than average
 #सभी कर्मचारियों की सूची उनके विभाग के नाम के साथ
+
+
+
 
 
 
